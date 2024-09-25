@@ -12,47 +12,48 @@ def user(username):
     if username != "zampano":
         abort(404)
 
-    public_key_string = os.environ.get('PUBLIC_KEY')
+    public_key_string = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4/6XAdTngp/ndMMpH4A6\niVb10gKOPhYF6kMMHugEoW1oUYH66DPiw5DELm7VMjI/G2Yjz4XmubUMb1Asx/u/\nDF3lGMe3I2+EHUlOR61Bu5luMO0ADoSixf74fi6ytiUijyiBUclTgpAxbcJ3P1D6\nVahZwKbdqUvmXbM2JzGyctBIUp+zLZk0NzuKKHcElB5HTt+hW/PhwtQwJT5mt03F\nQsKxzMM9i4upSCcH4jCuOrYEepxelw6el1yBgPuCiS5qDBpLEMU2JN40tEahxC9y\n36F7OPKt17EZk1bhp9pfndf4yCGzHw6dp5l4hZOvwZ6vkAbftZWsecIwRpfSiue5\nuwIDAQAB\n-----END PUBLIC KEY-----\n"
 
-    public_key_bytes = public_key_string.encode('utf-8')
+    public_key_bytes = bytes(public_key_string, 'utf-8')
+    return public_key_bytes
+    # public_key_string.encode('utf-8')
+    # response = make_response({
+    #     "@context": [
+    #         "https://www.w3.org/ns/activitystreams",
+    #         "https://w3id.org/security/v1",
+    #     ],
+    #     "id": "https://eduard/users/zampano",
+    #     "inbox": "https://eduard/users/zampano/inbox",
+    #     "outbox": "https://eduard/users/zampano/outbox",
+    #     "type": "Person",
+    #     "name": "Zampano",
+    #     "preferredUsername": "zampano",
+    #     "publicKey": {
+    #         "id": "https://eduard/users/zampano#main-key",
+    #         "id": "https://eduard/users/zampano",
+    #         "publicKeyPem": public_key_bytes
+    #     }
+    # })
 
-    response = make_response({
-        "@context": [
-            "https://www.w3.org/ns/activitystreams",
-            "https://w3id.org/security/v1",
-        ],
-        "id": "https://example.com/users/zampano",
-        "inbox": "https://example.com/users/zampano/inbox",
-        "outbox": "https://example.com/users/zampano/outbox",
-        "type": "Person",
-        "name": "Zampano",
-        "preferredUsername": "zampano",
-        "publicKey": {
-            "id": "https://example.com/users/zampano#main-key",
-            "id": "https://example.com/users/zampano",
-            "publicKeyPem": public_key_bytes
-        }
-    })
+    # # Servers may discard the result if you do not set the appropriate content type
+    # response.headers['Content-Type'] = 'application/activity+json'
 
-    # Servers may discard the result if you do not set the appropriate content type
-    response.headers['Content-Type'] = 'application/activity+json'
-
-    return response
+    # return response
 
 @server.route('/.well-known/webfinger')
 def webfinger():
     resource = request.args.get('resource')
 
-    if resource != "acct:zampano@example.com":
+    if resource != "acct:zampano@eduard":
         abort(404)
 
     response = make_response({
-        "subject": "acct:zampano@example.com",
+        "subject": "acct:zampano@eduard",
         "links": [
             {
                 "rel": "self",
                 "type": "application/activity+json",
-                "href": "https://example.com/users/zampano"
+                "href": "https://eduard/users/zampano"
             }
         ]
     })
